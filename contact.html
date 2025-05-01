@@ -1,0 +1,148 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Portfólio</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link href="/css//main.min.css" rel="stylesheet">
+  <style>
+    section{
+      padding: 60px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-md navbar-light bg-primary pt-5 pb-4">
+    <div class="container-xxl">
+      <a class="navbar-brand" href="index.html">
+        <span class="text-secondary fw-bold text-white">
+          <i class="bi bi-book-half"></i> Meu Portfólio
+        </span>
+      </a>
+
+      <!-- toggle button for mobile nav -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- navbar links -->
+      <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bold" href="index.html">Home</a>
+          </li>
+
+        <!-- Dropdown de Projetos -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="projetosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Projetos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="projetosDropdown">
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/pne/shiny.html" target="_blank">Painel PNE</a></li>
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/inova-e/dashboard.html" target="_blank">inova-e: Investimentos PD&D</a></li>
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/inova-e/patentes.html" target="_blank">inova-e: Módulo de Patentes</a></li>
+              <li><a class="dropdown-item" href="https://pedroalmeida08.github.io/HTML-SurveyForm/" target="_blank">Formulário de Pesquisa</a></li>
+              <li><a class="dropdown-item" href="https://pedroalmeida08.github.io/HTML-TributePage/" target="_blank">Página de Tributos</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bold" href="about.html">Sobre</a>
+          </li>
+
+          <li class="nav-item ms-2 d-none d-md-inline">
+            <a class="btn btn-secondary bg-black border-black fw-bold text-white" href="contact.html">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section id="contact">
+    <div class="container-lg">
+      
+      <div class="text-center">
+        <h2>Entre em contato comigo</h2>
+        <p class="lead">Quer tirar sua ideia do papel? Preencha o formulário e assim que possível irei te responder!</p>
+      </div>
+
+      <div class="row justify-content-center my-5">
+        <div class="col-lg-6"> 
+          <form>
+            <label for="email" class="form-label">Email:</label>
+            <div class="input-group mb-4">
+              <span class="input-group-text">
+                <i class="bi bi-envelope-fill text-secondary"></i>
+              </span>
+              <input type="text" id="email" class="form-control" placeholder="ex: joao@exemplo.com" />
+              <!-- tooltip -->
+              <span class="input-group-text">
+                <span class="tt" data-bs-placement="bottom" title="Escolha um email que você tenha acesso.">
+                  <i class="bi bi-question-circle text-muted"></i>
+                </span>
+              </span>
+            </div>
+            <label for="name" class="form-label">Nome Completo:</label>
+            <div class="mb-4 input-group">
+              <span class="input-group-text">
+                <i class="bi bi-person-fill text-secondary"></i>
+              </span>
+              <input type="text" id="name" class="form-control" placeholder="ex: João" />
+              <!-- tooltip -->
+              <span class="input-group-text">
+                <span class="tt" data-bs-placement="bottom" title="Seu nome completo facilita sua identificação.">
+                  <i class="bi bi-question-circle text-muted"></i>
+                </span>
+              </span>
+            </div>
+            <label for="subject" class="form-label">Sobre o que você deseja falar?</label>
+            <div class="mb-4 input-group">
+              <span class="input-group-text">
+                <i class="bi bi-chat-right-dots-fill text-secondary"></i>
+              </span>
+              <select class="form-select" id="subject">
+                <option value="pricing" selected>Preciso de ajuda para criar um novo projeto</option>
+                <option value="content">Tenho um projeto e desejo tirar meu projeto do papel</option>
+                <option value="other">Orçamento</option>
+                <option value="other">Manutenção</option>
+                <option value="other">Outro assunto</option>
+              </select>
+            </div>
+            <div class="mb-4 mt-5 form-floating">
+              <textarea class="form-control" id="query" style="height: 140px" placeholder="query"></textarea>
+              <label for="query">Escreva aqui ...</label>
+            </div>
+            <div class="mb-4 text-center">
+              <button type="submit" class="btn btn-secondary">Enviar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="container">
+      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+          <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+            <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+          </a>
+          <span class="mb-3 mb-md-0 text-muted">© 2025 Company, Inc</span>
+        </div>
+      </footer>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <script>
+    const tooltips = document.querySelectorAll('.tt')
+    tooltips.forEach(t => {
+      new bootstrap.Tooltip(t)
+    })
+  </script>
+</body>
+</html>

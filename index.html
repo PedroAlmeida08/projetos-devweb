@@ -1,0 +1,109 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Portfólio</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link href="/css//main.min.css" rel="stylesheet">
+  <style>
+    section{
+      padding: 60px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-md navbar-light bg-primary pt-5 pb-4">
+    <div class="container-xxl">
+      <a class="navbar-brand" href="index.html">
+        <span class="text-secondary fw-bold text-white">
+          <i class="bi bi-book-half"></i> Meu Portfólio
+        </span>
+      </a>
+
+      <!-- toggle button for mobile nav -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- navbar links -->
+      <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bold" href="index.html">Home</a>
+          </li>
+
+        <!-- Dropdown de Projetos -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="projetosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Projetos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="projetosDropdown">
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/pne/shiny.html" target="_blank">Painel PNE</a></li>
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/inova-e/dashboard.html" target="_blank">inova-e: Investimentos PD&D</a></li>
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/inova-e/patentes.html" target="_blank">inova-e: Módulo de Patentes</a></li>
+              <li><a class="dropdown-item" href="https://pedroalmeida08.github.io/HTML-SurveyForm/" target="_blank">Formulário de Pesquisa</a></li>
+              <li><a class="dropdown-item" href="https://pedroalmeida08.github.io/HTML-TributePage/" target="_blank">Página de Tributos</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bold" href="about.html">Sobre</a>
+          </li>
+
+          <li class="nav-item ms-2 d-none d-md-inline">
+            <a class="btn btn-secondary bg-black border-black fw-bold text-white" href="contact.html">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- main image & intro text -->
+  <section id="intro">
+    <div class="container-lg">
+      <div class="row g-4 justify-content-center align-items-center">
+        <div class="col-md-5 text-center text-md-start">
+          <h1>
+            <div class="display-2">Olá!</div>
+            <div class="display-5 text-muted">Tudo bem?</div>
+          </h1>
+          <p class="lead my-4 text-muted">Me chamo João! </br>
+            Apaixonado por tecnologia desde a infância. </br>
+            Graduando em Ciência da Computação pela UFF. </br>
+            Deseja saber mais?
+            Continue navegando!</p>
+          <a href="projects.html" class="btn btn-primary btn-lg text-white">Explorar</a>
+          <!-- open sidebar / offcanvas -->
+        </div>
+        <div class="col-md-5 text-center d-none d-md-block">
+          <img src="assets/hello-world.png.webp" class="img-fluid" alt="ebook">
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="container">
+      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+          <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+            <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+          </a>
+          <span class="mb-3 mb-md-0 text-muted">© 2025 Company, Inc</span>
+        </div>
+      </footer>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <script>
+    const tooltips = document.querySelectorAll('.tt')
+    tooltips.forEach(t => {
+      new bootstrap.Tooltip(t)
+    })
+  </script>
+</body>
+</html>

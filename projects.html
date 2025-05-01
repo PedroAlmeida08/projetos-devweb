@@ -1,0 +1,159 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Portfólio</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+  <link href="/css//main.min.css" rel="stylesheet">
+  <style>
+    section{
+      padding: 60px 0;
+    }
+    .card-img-fixed {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar navbar-expand-md navbar-light bg-primary pt-5 pb-4">
+    <div class="container-xxl">
+      <a class="navbar-brand" href="index.html">
+        <span class="text-secondary fw-bold text-white">
+          <i class="bi bi-book-half"></i> Meu Portfólio
+        </span>
+      </a>
+
+      <!-- toggle button for mobile nav -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- navbar links -->
+      <div class="collapse navbar-collapse justify-content-end align-center" id="main-nav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bold" href="index.html">Home</a>
+          </li>
+
+        <!-- Dropdown de Projetos -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="projetosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Projetos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="projetosDropdown">
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/pne/shiny.html" target="_blank">Painel PNE</a></li>
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/inova-e/dashboard.html" target="_blank">inova-e: Investimentos PD&D</a></li>
+              <li><a class="dropdown-item" href="https://dashboard.epe.gov.br/apps/inova-e/patentes.html" target="_blank">inova-e: Módulo de Patentes</a></li>
+              <li><a class="dropdown-item" href="https://pedroalmeida08.github.io/HTML-SurveyForm/" target="_blank">Formulário de Pesquisa</a></li>
+              <li><a class="dropdown-item" href="https://pedroalmeida08.github.io/HTML-TributePage/" target="_blank">Página de Tributos</a></li>
+            </ul>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link text-white fw-bold" href="about.html">Sobre</a>
+          </li>
+
+          <li class="nav-item ms-2 d-none d-md-inline">
+            <a class="btn btn-secondary bg-black border-black fw-bold text-white" href="contact.html">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section id="examples" class="mt-2">
+    <div class="container-lg">
+      <div class="container my-5">
+
+        <!-- Primeira linha com 3 cards -->
+        <div class="row g-4 justify-content-center">
+          
+          <!-- Card 1 -->
+          <div class="col-10 col-md-4 col-lg-3">
+            <div class="card border-1 h-100">
+              <img src="assets/pne.png" class="card-img-top card-img-fixed" alt="Formulário de Pesquisa">
+              <div class="card-body text-center py-4">
+                <h4 class="card-title">Painel PNE</h4>
+                <a href="https://dashboard.epe.gov.br/apps/pne/shiny.html" target="_blank" class="btn btn-outline-primary btn-lg mt-3">Ver mais</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="col-10 col-md-4 col-lg-3">
+            <div class="card border-1 h-100">
+              <img src="assets/inova-e.png" class="card-img-top card-img-fixed" alt="Formulário de Pesquisa">
+              <div class="card-body text-center py-4">
+                <h4 class="card-title">inova-e: Investimentos em PD&D</h4>
+                <a href="https://dashboard.epe.gov.br/apps/inova-e/dashboard.html" target="_blank" class="btn btn-outline-primary btn-lg mt-3">Ver mais</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="col-10 col-md-4 col-lg-3">
+            <div class="card border-1 h-100">
+              <img src="assets/inova-e.png" class="card-img-top card-img-fixed" alt="Formulário de Pesquisa">
+              <div class="card-body text-center py-4">
+                <h4 class="card-title">inova-e: Módulo de Patentes</h4>
+                <a href="https://dashboard.epe.gov.br/apps/inova-e/patentes.html" target="_blank" class="btn btn-outline-primary btn-lg mt-3">Ver mais</a>
+              </div>
+            </div>
+          </div>
+        </div> 
+        
+        <!-- Segunda linha com 2 cards -->
+        <div class="row g-4 justify-content-center mt-4">
+          
+        <!-- Card 4 -->
+        <div class="col-10 col-md-4 col-lg-3">
+          <div class="card border-1 h-100">
+            <img src="https://github.com/PedroAlmeida08/HTML-SurveyForm/blob/ac1461aa4aedad85d9de2c0a98f8b54e3675990f/styles/surveyForm.jpg?raw=true" class="card-img-top card-img-fixed" alt="Formulário de Pesquisa">
+            <div class="card-body text-center py-4">
+              <h4 class="card-title">Formulário de Pesquisa</h4>
+              <a href="https://pedroalmeida08.github.io/HTML-SurveyForm/" target="_blank" class="btn btn-outline-primary btn-lg mt-3">Ver mais</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Card 5 -->
+        <div class="col-10 col-md-4 col-lg-3">
+          <div class="card border-1 h-100">
+            <img src="https://github.com/PedroAlmeida08/HTML-TributePage/blob/4d4efa82db1b1adb3490a2cf5441036bba508d69/styles/tributePage.jpg?raw=true" class="card-img-top card-img-fixed" alt="Página de Tributo">
+            <div class="card-body text-center py-4">
+              <h4 class="card-title">Página de Tributo</h4>
+              <a href="https://pedroalmeida08.github.io/HTML-TributePage/" target="_blank" class="btn btn-outline-primary btn-lg mt-3">Ver mais</a>
+            </div>
+          </div>
+        </div>          
+      </div>
+    </div>
+  </section>
+  
+  <footer>
+    <div class="container">
+      <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+          <a href="/" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1">
+            <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+          </a>
+          <span class="mb-3 mb-md-0 text-muted">© 2025 Company, Inc</span>
+        </div>
+      </footer>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  <script>
+    const tooltips = document.querySelectorAll('.tt')
+    tooltips.forEach(t => {
+      new bootstrap.Tooltip(t)
+    })
+  </script>
+</body>
+</html>
