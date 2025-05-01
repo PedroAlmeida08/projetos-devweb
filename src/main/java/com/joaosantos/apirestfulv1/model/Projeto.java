@@ -14,30 +14,26 @@ import java.time.LocalDate;
 @NoArgsConstructor // Lombok cria um método construtor padrão
 @ToString // Lombok cria o método ToString
 @Entity
-public class Produto {
+public class Projeto {
     @Id // indica correspondência a chave primária no BD
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Campo com auto incremento
     private Long id;
     private String imagem;
     private String nome;
     private String descricao;
-    private boolean disponivel;
-    private int qtdEstoque;
-    private BigDecimal preco;
+    private boolean finalizado;
     private LocalDate dataCadastro;
-    @ManyToOne // Many Produto to One Categoria
-    private Categoria categoria;
+    @ManyToOne // Many Projeto to One Autor
+    private Autor autor;
 
-    public Produto(String imagem, String nome, String descricao,
-                   boolean disponivel, int qtdEstoque, BigDecimal preco,
-                   LocalDate dataCadastro, Categoria categoria) {
+    public Projeto(String imagem, String nome, String descricao,
+                   boolean finalizado, LocalDate dataCadastro,
+                   Autor autor) {
         this.imagem = imagem;
         this.nome = nome;
         this.descricao = descricao;
-        this.disponivel = disponivel;
-        this.qtdEstoque = qtdEstoque;
-        this.preco = preco;
+        this.finalizado = finalizado;
         this.dataCadastro = dataCadastro;
-        this.categoria = categoria;
+        this.autor = autor;
     }
 }

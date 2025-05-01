@@ -1,9 +1,9 @@
 package com.joaosantos.apirestfulv1;
 
-import com.joaosantos.apirestfulv1.model.Categoria;
-import com.joaosantos.apirestfulv1.model.Produto;
-import com.joaosantos.apirestfulv1.repository.CategoriaRepository;
-import com.joaosantos.apirestfulv1.repository.ProdutoRepository;
+import com.joaosantos.apirestfulv1.model.Autor;
+import com.joaosantos.apirestfulv1.model.Projeto;
+import com.joaosantos.apirestfulv1.repository.AutorRepository;
+import com.joaosantos.apirestfulv1.repository.ProjetoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -18,10 +18,10 @@ public class Apirestfulv1Application implements CommandLineRunner {
 	// Quando o método run encontra essa anotação, cria um objeto de uma classe que implementa a
 	// interface ProdutoRepository
 	@Autowired
-	private ProdutoRepository produtoRepository;
+	private ProjetoRepository projetoRepository;
 
 	@Autowired
-	private CategoriaRepository categoriaRepository;
+	private AutorRepository autorRepository;
 
 	// .run() é um método CommandLineRunner e será utilizado para popular banco de dados
 	// .run() coloca no ar o servidor Tomcat
@@ -33,40 +33,64 @@ public class Apirestfulv1Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		Categoria frutas = new Categoria("Frutas");
-		categoriaRepository.save(frutas);
-		Categoria legumes = new Categoria("Legumes");
-		categoriaRepository.save(legumes);
-		Categoria verduras = new Categoria("Verduras");
-		categoriaRepository.save(verduras);
+		Autor autor1 = new Autor("João Santos");
+		autorRepository.save(autor1);
+		Autor autor2 = new Autor("Carlos Ribeiro");
+		autorRepository.save(autor2);
 
-		Produto produto = new Produto(
-				"abacate.png",
-				"Abacate",
-				"1 unidade aprox. 750g",
+		Projeto projeto = new Projeto(
+				"pne2050.png",
+				"PNE 2050",
+				"Painel do Plano Nacional de Energia 2050",
 				true,
-				100,
-				BigDecimal.valueOf(2.45),
 				LocalDate.of(2024, 4, 26),
-				frutas);
+				autor1);
 
 		// Se produto for um objeto transiente, .save() chama o método persist da JPA
 		// Se produto for um objeto destacado, .save() chama o método merge da JPA
 		// Em tempo de compilação, .save() é procurado de ProdutoRepository pra cima
 		// Em tempo de execução, .save() é procurado de ProdutoRepositoryImpl e encontra o método .save() de DAOGenericoImpl e o herda
-		produtoRepository.save(produto);
+		projetoRepository.save(projeto);
 
-		produto = new Produto(
-				"abobrinha.jpg",
-				"Abobrinha",
-				"1 unidade aprox. 250g",
-				false,
-				200,
-				BigDecimal.valueOf(1.1),
-				LocalDate.of(2024, 5, 22),
-				legumes);
+		projeto = new Projeto(
+				"inovae.png",
+				"inova-e",
+				"Módulo de PD&D do inova-e",
+				true,
+				LocalDate.of(2024, 4, 26),
+				autor1);
 
-		produtoRepository.save(produto);
+		projetoRepository.save(projeto);
+
+		projeto = new Projeto(
+				"inovae.png",
+				"inova-e",
+				"Módulo de Patentes do inova-e",
+				true,
+				LocalDate.of(2024, 4, 26),
+				autor1);
+
+		projetoRepository.save(projeto);
+
+		projeto = new Projeto(
+				"formulario.png",
+				"Formulário de Pesquisa",
+				"Formulário de Pesquisa - freecodecamp",
+				true,
+				LocalDate.of(2024, 4, 26),
+				autor1);
+
+		projetoRepository.save(projeto);
+
+		projeto = new Projeto(
+				"tributo.png",
+				"Página de Tributo",
+				"Página de Tributo ao Dr. Norman Bourlaug",
+				true,
+				LocalDate.of(2024, 4, 26),
+				autor1);
+
+		projetoRepository.save(projeto);
 
 		System.out.println("Ok!");
 	}

@@ -14,21 +14,21 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @ToString
-public class Categoria {
+public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String nome;
 
     // Utilizado para não gerar um loop no JSON
-    // Uma categoria tem produtos, o produto tem uma categoria, umas categgoria tem produtos ...
+    // Um autor tem projetos, o projeto tem um autor, uns autores tem projetos ...
     @JsonIgnore
     // mappedBy -> informa que o método OneToMany é um espelhamento da relação ManyToOne
-    // que existe em Produto no campo categoria. Assim, elimina a crição de uma tabela
-    // intermediária. (Produto <-> ProdutoToCategoria <-> Categoria)
-    @OneToMany(mappedBy = "categoria") // One Categoria to Many Produto
-    private List<Produto> produtos;
-    public Categoria(String nome){
+    // que existe em Projeto no campo autor. Assim, elimina a criação de uma tabela
+    // intermediária. (Projeto <-> ProjetoToAutor <-> Autor)
+    @OneToMany(mappedBy = "autor") // One Autor to Many Projeto
+    private List<Projeto> projetos;
+    public Autor(String nome){
         this.nome = nome;
     }
 }

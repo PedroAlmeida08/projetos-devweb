@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ProdutoNaoEncontradoException.class)
-    public ResponseEntity<String> handleProdutoNaoEncontrado(ProdutoNaoEncontradoException e){
+    @ExceptionHandler(ProjetoNaoEncontradoException.class)
+    public ResponseEntity<String> handleProjetoNaoEncontrado(ProjetoNaoEncontradoException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
