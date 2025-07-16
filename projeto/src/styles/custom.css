@@ -1,0 +1,77 @@
+/* src/styles/custom.css */
+
+/*
+ * 1. Recriando seu tema customizado com CSS Variables
+ * O Bootstrap 5 usa variáveis CSS para suas cores. Ao redefinir
+ * --bs-primary, todos os componentes como .btn-primary e .bg-primary
+ * usarão a nova cor automaticamente.
+ */
+:root {
+  --bs-primary: #2596be;
+  --bs-light: #fbf5e5;
+  --bs-dark: #252527;
+  /* Mapeando as cores customizadas do seu SASS para novas variáveis CSS */
+  --custom-altlight: #f2ebfa;
+  --custom-altdark: #522192;
+}
+
+/*
+ * 2. Aplicando as cores da navbar
+ * No seu SASS, você definiu a cor do texto e do ícone da navbar.
+ * Vamos recriar isso com CSS puro, sobrescrevendo as classes do Bootstrap.
+ */
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-brand {
+  color: #fbf5e5; /* Cor da variável $light */
+}
+
+.navbar-dark .navbar-toggler {
+  border-color: rgba(251, 245, 229, 0.5); /* Cor da variável $light com transparência */
+}
+
+/*
+ * 3. Adicionando os estilos globais que estavam no <style> dos seus HTMLs
+ */
+section {
+  padding: 60px 0;
+}
+
+.card-img-fixed {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/*
+ * Efeitos da Barra de Navegação
+ */
+
+/* 1. Prepara todos os links da navbar para uma transição suave */
+.navbar .nav-link {
+  transition: transform 0.2s ease-in-out, filter 0.2s ease-in-out;
+  border-bottom: 2px solid transparent; /* Borda transparente para evitar que o layout pule */
+  padding-bottom: 4px; /* Espaçamento para a borda */
+}
+
+/* 2. Efeito de hover: levanta o item e aumenta o brilho */
+.navbar .nav-link:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.2);
+}
+
+/* 3. Estilo para o link da página ATIVA */
+/* (A classe .active é adicionada automaticamente pelo <NavLink>) */
+.navbar .nav-link.active {
+  color: #fff !important; /* Garante que a cor ativa seja branca */
+  border-bottom-color: #fff; /* Adiciona uma linha branca embaixo do item ativo */
+}
+
+/* 4. Estilo para o botão de contato, que é diferente */
+.navbar .btn {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.navbar .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
