@@ -1,22 +1,22 @@
-import { createBrowserRouter } from "react-router-dom";
-import Layout from "./Layout";
-import HomePage from "../pages/HomePage";
-import ContatosPage from "../pages/ContatosPage";
-import ProdutosPage from "../pages/ProdutosPage";
-import CarrinhoPage from "../pages/CarrinhoPage";
-import LoginPage from "../pages/LoginPage";
+// src/routes/Router.tsx
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout />,
-        children: [
-            {path: "", element: <HomePage />},
-            {path: "produtos", element: <ProdutosPage />},
-            {path: "carrinho", element: <CarrinhoPage />},
-            {path: "contatos", element: <ContatosPage />},
-            {path: "login", element: <LoginPage />}
-        ]
-    }
-])
-export default router;
+// Importe suas páginas
+import Home from '../pages/Home';
+import Sobre from '../pages/Sobre';
+import Projetos from '../pages/Projetos';
+import Contato from '../pages/Contato';
+
+const AppRouter: React.FC = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<Sobre />} />
+      <Route path="/projects" element={<Projetos />} />
+      <Route path="/contact" element={<Contato />} />
+    </Routes>
+  );
+};
+
+export default AppRouter;

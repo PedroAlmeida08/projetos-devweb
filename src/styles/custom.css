@@ -1,0 +1,43 @@
+/* src/styles/custom.css */
+
+/*
+ * 1. Recriando seu tema customizado com CSS Variables
+ * O Bootstrap 5 usa variáveis CSS para suas cores. Ao redefinir
+ * --bs-primary, todos os componentes como .btn-primary e .bg-primary
+ * usarão a nova cor automaticamente.
+ */
+:root {
+  --bs-primary: #2596be;
+  --bs-light: #fbf5e5;
+  --bs-dark: #252527;
+  /* Mapeando as cores customizadas do seu SASS para novas variáveis CSS */
+  --custom-altlight: #f2ebfa;
+  --custom-altdark: #522192;
+}
+
+/*
+ * 2. Aplicando as cores da navbar
+ * No seu SASS, você definiu a cor do texto e do ícone da navbar.
+ * Vamos recriar isso com CSS puro, sobrescrevendo as classes do Bootstrap.
+ */
+.navbar-dark .navbar-nav .nav-link,
+.navbar-dark .navbar-brand {
+  color: #fbf5e5; /* Cor da variável $light */
+}
+
+.navbar-dark .navbar-toggler {
+  border-color: rgba(251, 245, 229, 0.5); /* Cor da variável $light com transparência */
+}
+
+/*
+ * 3. Adicionando os estilos globais que estavam no <style> dos seus HTMLs
+ */
+section {
+  padding: 60px 0;
+}
+
+.card-img-fixed {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+}
