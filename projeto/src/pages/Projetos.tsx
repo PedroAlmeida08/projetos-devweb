@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../components/ProjectCard';
-import { type Projeto } from '../types';
+import { type Projeto } from '../interfaces/Projeto';
 
 const Projetos: React.FC = () => {
   const [projetos, setProjetos] = useState<Projeto[]>([]);

@@ -1,18 +1,25 @@
-// src/main.tsx
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom'; // 1. Importe o BrowserRouter
+import { BrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'; // ✅ Adicione esta linha
 import App from './App.tsx';
 
-// ... Seus outros imports de CSS e JS ...
+// Seus outros imports de CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/custom.css';
+
+// Import do JavaScript do Bootstrap
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+// Crie uma instância do cliente
+const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter> {/* 2. Envolva todo o <App /> */}
-      <App />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </QueryClientProvider>
   </React.StrictMode>,
 );

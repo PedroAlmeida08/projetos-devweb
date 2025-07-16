@@ -1,7 +1,4 @@
-export interface Autor {
-  id?: number;
-  nome: string;
-}
+import { type Autor } from './Autor';
 
 export interface Projeto {
   id: number;
