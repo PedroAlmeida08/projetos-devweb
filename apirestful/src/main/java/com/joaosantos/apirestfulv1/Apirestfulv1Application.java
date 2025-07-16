@@ -39,9 +39,10 @@ public class Apirestfulv1Application implements CommandLineRunner {
 		autorRepository.save(autor2);
 
 		Projeto projeto = new Projeto(
-				"pne2050.png",
+				"pne.png",
 				"PNE 2050",
 				"Painel do Plano Nacional de Energia 2050",
+				"https://dashboard.epe.gov.br/apps/pne/shiny.html",
 				true,
 				LocalDate.of(2024, 4, 26),
 				autor1);
@@ -53,9 +54,10 @@ public class Apirestfulv1Application implements CommandLineRunner {
 		projetoRepository.save(projeto);
 
 		projeto = new Projeto(
-				"inovae.png",
+				"inova-e.png",
 				"inova-e",
 				"Módulo de PD&D do inova-e",
+				"https://dashboard.epe.gov.br/apps/inova-e/dashboard.html",
 				true,
 				LocalDate.of(2024, 4, 26),
 				autor1);
@@ -63,9 +65,10 @@ public class Apirestfulv1Application implements CommandLineRunner {
 		projetoRepository.save(projeto);
 
 		projeto = new Projeto(
-				"inovae.png",
+				"inova-e.png",
 				"inova-e",
 				"Módulo de Patentes do inova-e",
+				"https://dashboard.epe.gov.br/apps/inova-e/patentes.html",
 				true,
 				LocalDate.of(2024, 4, 26),
 				autor1);
@@ -73,9 +76,10 @@ public class Apirestfulv1Application implements CommandLineRunner {
 		projetoRepository.save(projeto);
 
 		projeto = new Projeto(
-				"formulario.png",
+				"surveyForm.jpg",
 				"Formulário de Pesquisa",
 				"Formulário de Pesquisa - freecodecamp",
+				"https://pedroalmeida08.github.io/HTML-SurveyForm/",
 				true,
 				LocalDate.of(2024, 4, 26),
 				autor1);
@@ -83,9 +87,10 @@ public class Apirestfulv1Application implements CommandLineRunner {
 		projetoRepository.save(projeto);
 
 		projeto = new Projeto(
-				"tributo.png",
+				"tributePage.jpg",
 				"Página de Tributo",
 				"Página de Tributo ao Dr. Norman Bourlaug",
+				"https://pedroalmeida08.github.io/HTML-TributePage/",
 				true,
 				LocalDate.of(2024, 4, 26),
 				autor1);

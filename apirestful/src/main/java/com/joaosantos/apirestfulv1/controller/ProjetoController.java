@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("http://localhost:5173")
 @RestController                // GET - POST - PUT - DELETE
 @RequestMapping("projetos") // Indica que todas as requisições feitas http://localhost:8080/projetos
 // serão direcionadas a esse controller

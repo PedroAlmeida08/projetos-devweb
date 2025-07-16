@@ -21,17 +21,19 @@ public class Projeto {
     private String imagem;
     private String nome;
     private String descricao;
+    private String url;
     private boolean finalizado;
     private LocalDate dataCadastro;
     @ManyToOne // Many Projeto to One Autor
     private Autor autor;
 
-    public Projeto(String imagem, String nome, String descricao,
+    public Projeto(String imagem, String nome, String descricao, String url,
                    boolean finalizado, LocalDate dataCadastro,
                    Autor autor) {
         this.imagem = imagem;
         this.nome = nome;
         this.descricao = descricao;
+        this.url = url;
         this.finalizado = finalizado;
         this.dataCadastro = dataCadastro;
         this.autor = autor;
