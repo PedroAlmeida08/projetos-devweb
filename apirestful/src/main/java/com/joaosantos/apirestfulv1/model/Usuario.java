@@ -12,24 +12,33 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * Entidade que representa um usuário no sistema.
- * Utiliza o Project Lombok para reduzir código boilerplate.
+ * Entidade que representa um usuário no sistema, mapeada para a tabela "usuarios".
+ * Utiliza o Project Lombok para gerar automaticamente os métodos getters, setters e construtores.
  */
 @Entity
 @Table(name = "usuarios")
-@Getter                 // Gera todos os métodos getters (ex: getId(), getConta()) em tempo de compilação.
-@Setter                 // Gera todos os métodos setters (ex: setId(), setConta()) em tempo de compilação.
-@NoArgsConstructor      // Gera o construtor público sem argumentos, que é obrigatório para o JPA.
-@ToString(exclude = "senha") // Gera um método toString() útil para debugging, excluindo o campo 'senha' por segurança.
+@Getter                 // Gera todos os métodos getters (getUsername(), getSenha(), etc.)
+@Setter                 // Gera todos os métodos setters (setUsername(), setSenha(), etc.)
+@NoArgsConstructor      // Gera o construtor padrão sem argumentos, exigido pelo JPA
+@ToString(exclude = "senha") // Gera o método toString(), omitindo o campo 'senha' por segurança
 public class Usuario {
 
+    /**
+     * Identificador único do usuário, gerado automaticamente pelo banco de dados.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Nome de usuário único para login. Não pode ser nulo.
+     */
     @Column(unique = true, nullable = false)
-    private String conta;
+    private String username;
 
+    /**
+     * Senha do usuário, armazenada de forma criptografada (hash). Não pode ser nula.
+     */
     @Column(nullable = false)
     private String senha;
 

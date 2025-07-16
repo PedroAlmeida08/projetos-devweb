@@ -2,13 +2,13 @@
 import { z } from 'zod';
 
 export const cadastroSchema = z.object({
-  conta: z.string().email({ message: "Por favor, insira um e-mail válido." }),
+  // ✅ Validação atualizada para nome de usuário
+  username: z.string().min(3, { message: "O nome de usuário deve ter no mínimo 3 caracteres." }),
   senha: z.string().min(8, { message: "A senha deve ter no mínimo 8 caracteres." }),
   confirmacaoSenha: z.string()
 }).refine((data) => data.senha === data.confirmacaoSenha, {
   message: "As senhas não coincidem.",
-  path: ["confirmacaoSenha"], // Anexa o erro ao campo de confirmação
+  path: ["confirmacaoSenha"],
 });
 
-// Extrai o tipo TypeScript do schema para usar nos nossos componentes
 export type CadastroSchema = z.infer<typeof cadastroSchema>;

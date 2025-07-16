@@ -1,4 +1,5 @@
+// src/interfaces/Usuario.ts
 export interface Usuario {
-  conta: string;
+  username: string; // ✅ Renomeado de 'conta'
   senha?: string;
 }
