@@ -8,27 +8,26 @@ import Projetos from '../pages/Projetos';
 import Contato from '../pages/Contato';
 import Cadastro from '../pages/Cadastro';
 import Login from '../pages/Login';
+import Favoritos from '../pages/Favoritos';
+
+// Importa o componente de Rota Privada
+import PrivateRoute from './PrivateRoute';
 
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      {/* Rota para a página inicial */}
+      {/* Rotas Públicas */}
       <Route path="/" element={<Home />} />
-
-      {/* Rota para a página "Sobre" */}
       <Route path="/about" element={<Sobre />} />
-
-      {/* Rota para a página "Projetos" */}
       <Route path="/projects" element={<Projetos />} />
-
-      {/* Rota para a página "Contato" */}
       <Route path="/contact" element={<Contato />} />
-      
-      {/* Rota para a página de Cadastro de Usuário */}
       <Route path="/cadastrar" element={<Cadastro />} />
-
-      {/* Rota para a página de Login */}
       <Route path="/login" element={<Login />} />
+
+      {/* Rotas Privadas (só acessíveis se o usuário estiver logado) */}
+      <Route element={<PrivateRoute />}>
+        <Route path="/favoritos" element={<Favoritos />} />
+      </Route>
     </Routes>
   );
 };

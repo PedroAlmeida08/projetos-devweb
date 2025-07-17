@@ -1,45 +1,42 @@
 package com.joaosantos.apirestfulv1.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import java.util.HashSet;
+import java.util.Set;
 
-/**
- * Entidade que representa um usuário no sistema, mapeada para a tabela "usuarios".
- * Utiliza o Project Lombok para gerar automaticamente os métodos getters, setters e construtores.
- */
 @Entity
 @Table(name = "usuarios")
-@Getter                 // Gera todos os métodos getters (getUsername(), getSenha(), etc.)
-@Setter                 // Gera todos os métodos setters (setUsername(), setSenha(), etc.)
-@NoArgsConstructor      // Gera o construtor padrão sem argumentos, exigido pelo JPA
-@ToString(exclude = "senha") // Gera o método toString(), omitindo o campo 'senha' por segurança
+@Getter
+@Setter
+@NoArgsConstructor
+// Excluímos ambos os relacionamentos do toString para evitar loops infinitos
+@ToString(exclude = {"senha", "projetosFavoritos"})
 public class Usuario {
 
-    /**
-     * Identificador único do usuário, gerado automaticamente pelo banco de dados.
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Nome de usuário único para login. Não pode ser nulo.
-     */
     @Column(unique = true, nullable = false)
     private String username;
 
-    /**
-     * Senha do usuário, armazenada de forma criptografada (hash). Não pode ser nula.
-     */
     @Column(nullable = false)
     private String senha;
 
+    /**
+     * Relacionamento Muitos-para-Muitos com Projetos.
+     * FetchType.LAZY: Carrega os favoritos apenas quando explicitamente solicitado. Melhora a performance.
+     * JoinTable: Configura a tabela intermediária que ligará usuários e projetos.
+     */
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "usuario_projetos_favoritos",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "projeto_id")
+    )
+    private Set<Projeto> projetosFavoritos = new HashSet<>();
 }

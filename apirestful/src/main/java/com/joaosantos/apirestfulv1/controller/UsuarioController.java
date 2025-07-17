@@ -75,24 +75,30 @@ public class UsuarioController {
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO dados) {
-        // Busca o usuário pelo username fornecido
+        System.out.println("---------------------------------");
+        System.out.println("Tentativa de login para o usuário: " + dados.username());
+
         var usuarioOptional = usuarioRepository.findByUsername(dados.username());
 
-        // Se o usuário não existir, retorna "Não Autorizado"
         if (usuarioOptional.isEmpty()) {
+            System.out.println("Resultado: Usuário não encontrado no banco de dados.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nome de usuário ou senha inválidos.");
         }
 
         var usuario = usuarioOptional.get();
+        System.out.println("Usuário encontrado. Hash da senha no banco: " + usuario.getSenha());
+        System.out.println("Senha recebida do formulário: " + dados.senha());
 
-        // Compara a senha enviada pelo formulário com a senha criptografada no banco
-        if (passwordEncoder.matches(dados.senha(), usuario.getSenha())) {
-            // Se as senhas corresponderem, o login é bem-sucedido
+        // Compara a senha enviada (texto puro) com a senha criptografada (hash)
+        boolean senhasCorrespondem = passwordEncoder.matches(dados.senha(), usuario.getSenha());
+        System.out.println("As senhas correspondem? " + senhasCorrespondem);
+        System.out.println("---------------------------------");
+
+        if (senhasCorrespondem) {
             var tokenResponse = new TokenResponseDTO(usuario.getId());
             return ResponseEntity.ok(tokenResponse);
         }
 
-        // Se as senhas não corresponderem, retorna "Não Autorizado"
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nome de usuário ou senha inválidos.");
     }
 }
