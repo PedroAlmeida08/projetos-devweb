@@ -35,13 +35,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ projeto }) => {
     }
   };
 
-  // Monta o caminho para a imagem que está na pasta /public/images/
+  // Monta o caminho para a imagem do projeto (verifique se a pasta é 'images' ou 'assets')
   const imageUrl = `/assets/${projeto.imagem}`;
 
   // Lógica robusta para formatar a data
   let dataFormatada = 'Data indisponível';
   if (projeto.dataCadastro) {
     const partesData = projeto.dataCadastro.split('-');
+    // Correção: Garantir que cada Number() feche seu parêntese corretamente
     const dataUTC = new Date(Date.UTC(Number(partesData[0]), Number(partesData[1]) - 1, Number(partesData[2])));
 
     if (!isNaN(dataUTC.getTime())) {
@@ -57,10 +58,15 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ projeto }) => {
          <button 
             onClick={handleToggleFavorito} 
             className="btn btn-light btn-sm position-absolute top-0 start-0 m-2" 
-            style={{ zIndex: 10 }}
+            style={{ zIndex: 10, lineHeight: 0 }} // Ajustes para alinhar o ícone
             aria-label={isFavorito ? "Remover dos favoritos" : "Adicionar aos favoritos"}
          >
-            <i className={`bi ${isFavorito ? 'bi-star-fill text-warning' : 'bi-star'}`}></i>
+            {/* ✅ ÍCONE ATUALIZADO PARA SVG ✅ */}
+            <img 
+              src={isFavorito ? '/icons/heart-fill.svg' : '/icons/heart.svg'} 
+              alt="Ícone de Favorito"
+              style={{ width: '16px', height: '16px' }}
+            />
          </button>
       )}
 
