@@ -3,14 +3,13 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import useUsuarioStore from '../store/UsuarioStore';
 
 const Header: React.FC = () => {
-  const { usuarioId, setUsuarioLogado } = useUsuarioStore();
+  // Acessa o objeto de usuário completo e a ação de logout do store
+  const { user, logout } = useUsuarioStore();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    setUsuarioLogado(0);
-    // Limpar favoritos do store ao deslogar
-    useUsuarioStore.getState().setFavoritos([]);
-    navigate('/login');
+    logout(); // Ação do store que limpa user e favoritos
+    navigate('/login'); // Redireciona para a página de login
   };
 
   return (
@@ -32,20 +31,30 @@ const Header: React.FC = () => {
             <li className="nav-item">
               <NavLink className="nav-link text-white fw-bold" to="/projects">Projetos</NavLink>
             </li>
-            {/* Link condicional para Favoritos */}
-            {usuarioId > 0 && (
+
+            {/* Link condicional para Favoritos: só aparece se houver um usuário logado */}
+            {user && (
               <li className="nav-item">
                 <NavLink className="nav-link text-white fw-bold" to="/favoritos">Favoritos</NavLink>
               </li>
             )}
+            
             <li className="nav-item">
               <NavLink className="nav-link text-white fw-bold" to="/about">Sobre</NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link text-white fw-bold" to="/contact">Contato</NavLink>
             </li>
+
+            {/* Link condicional para Admin: só aparece se o usuário tiver a role 'ADMIN' */}
+            {user?.role === 'ADMIN' && (
+              <li className="nav-item">
+                <NavLink className="nav-link text-white fw-bold" to="/admin">Admin</NavLink>
+              </li>
+            )}
+
             {/* Botão condicional de Login/Logout */}
-            {usuarioId > 0 ? (
+            {user ? (
               <li className="nav-item ms-md-2 mt-2 mt-md-0">
                 <button className="btn btn-light" onClick={handleLogout}>Logout</button>
               </li>
@@ -60,4 +69,5 @@ const Header: React.FC = () => {
     </nav>
   );
 };
+
 export default Header;

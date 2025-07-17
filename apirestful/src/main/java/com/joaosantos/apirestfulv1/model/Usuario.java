@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,8 +13,7 @@ import java.util.Set;
 @Table(name = "usuarios")
 @Getter
 @Setter
-@NoArgsConstructor
-// Excluímos ambos os relacionamentos do toString para evitar loops infinitos
+@NoArgsConstructor // <- Gera o construtor vazio para o JPA: public Usuario() {}
 @ToString(exclude = {"senha", "projetosFavoritos"})
 public class Usuario {
 
@@ -27,11 +27,9 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    /**
-     * Relacionamento Muitos-para-Muitos com Projetos.
-     * FetchType.LAZY: Carrega os favoritos apenas quando explicitamente solicitado. Melhora a performance.
-     * JoinTable: Configura a tabela intermediária que ligará usuários e projetos.
-     */
+    @Column(nullable = false)
+    private String role;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuario_projetos_favoritos",
@@ -39,4 +37,17 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn(name = "projeto_id")
     )
     private Set<Projeto> projetosFavoritos = new HashSet<>();
+
+    /**
+     * ✅ CONSTRUTOR ADICIONADO ✅
+     * Construtor de conveniência para facilitar a criação de novos usuários no código.
+     * @param username O nome de usuário para o novo usuário.
+     * @param senha A senha (ainda em texto puro) para o novo usuário.
+     * @param role O papel (role) do novo usuário, ex: "USER" ou "ADMIN".
+     */
+    public Usuario(String username, String senha, String role) {
+        this.username = username;
+        this.senha = senha;
+        this.role = role;
+    }
 }

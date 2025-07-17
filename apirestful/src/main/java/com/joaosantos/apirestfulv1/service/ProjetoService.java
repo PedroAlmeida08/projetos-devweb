@@ -3,6 +3,7 @@ package com.joaosantos.apirestfulv1.service;
 import com.joaosantos.apirestfulv1.exception.ProjetoNaoEncontradoException;
 import com.joaosantos.apirestfulv1.model.Projeto;
 import com.joaosantos.apirestfulv1.repository.ProjetoRepository;
+import com.joaosantos.apirestfulv1.repository.UsuarioRepository; // 1. Importe o UsuarioRepository
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,61 +11,50 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProjetoService{
+public class ProjetoService {
 
     @Autowired
     private ProjetoRepository projetoRepository;
 
-    public List<Projeto> recuperarProjetos(){
+    @Autowired
+    private UsuarioRepository usuarioRepository; // 2. Injete o UsuarioRepository
+
+    public List<Projeto> recuperarProjetos() {
         return projetoRepository.recuperarProjetosComAutor();
     }
 
-    public Projeto cadastrarProjeto(Projeto projeto){
+    public Projeto cadastrarProjeto(Projeto projeto) {
         return projetoRepository.save(projeto);
     }
 
-// ==> Abordagem sem LOCK
-
-//    public Projeto alterarProjeto(Projeto projeto){
-//        Optional<Projeto> opt = projetoRepository.findById(projeto.getId());
-//        if(opt.isPresent()){
-//            return projetoRepository.save(projeto);
-//        }
-//        throw new ProjetoNaoEncontradoException("Projeto número: " + projeto.getId() + " não encontrado!");
-//    }
-
-// ==> Abordagem 1 com LOCK
-//    @Transactional // Indica que o método deverá abrir uma transação
-//                   // Cria entityManager, entityTransaction e realiza o commit
-//    public Projeto alterarProjeto(Projeto projeto){
-//        Optional<Projeto> opt = projetoRepository.recuperarProjetoPorIdComLock(projeto.getId());
-//        if(opt.isPresent()){
-//            return projetoRepository.save(projeto);
-//        }
-//        throw new ProjetoNaoEncontradoException("Projeto número: " + projeto.getId() + " não encontrado!");
-//    }
-
-    // ==> Abordagem 2 com LOCK
-    @Transactional // Indica que o método deverá abrir uma transação
-    // Cria entityManager, entityTransaction e realiza o commit
-    public Projeto alterarProjeto(Projeto projeto){
-        // supplier em Java é alguém que não recebe nada e retorna algo
-        // .orElseThrow() não recebe nada e retorna uma Exception
-        // () dentro de .elseThrow() indica que ele não receberá nada
-        // "() ->" == função lambda em Java
-        projetoRepository.recuperarProjetoPorIdComLock(projeto.getId()).
-                orElseThrow(() -> new ProjetoNaoEncontradoException(
+    @Transactional
+    public Projeto alterarProjeto(Projeto projeto) {
+        projetoRepository.recuperarProjetoPorIdComLock(projeto.getId())
+                .orElseThrow(() -> new ProjetoNaoEncontradoException(
                         "Projeto número: " + projeto.getId() + " não encontrado!"));
         return projetoRepository.save(projeto);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    /**
+     * ✅ LÓGICA DE REMOÇÃO ATUALIZADA ✅
+     * Remove um projeto e suas associações com os favoritos dos usuários.
+     * A anotação @Transactional garante que todas as operações (ou nenhuma) sejam concluídas.
+     */
+    @Transactional
     public void removerProjeto(long id) {
+        var projeto = projetoRepository.findById(id)
+                .orElseThrow(() -> new ProjetoNaoEncontradoException("Projeto número: " + id + " não encontrado!"));
+
+        // 3. Busca todos os usuários que favoritaram este projeto
+        var usuarios = usuarioRepository.findAll();
+        usuarios.forEach(usuario -> {
+            boolean removed = usuario.getProjetosFavoritos().remove(projeto);
+            if (removed) {
+                usuarioRepository.save(usuario);
+            }
+        });
+
+        // 4. Agora, deleta o projeto com segurança
         projetoRepository.deleteById(id);
-//        projetoRepository.deleteById(1L);
-//        if (true) {
-//            throw new Exception("Deu erro!");
-//        }
-//        projetoRepository.deleteById(2L);
     }
 }

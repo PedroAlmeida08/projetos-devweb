@@ -26,16 +26,17 @@ record UsuarioCadastroDTO(
 record LoginDTO(String username, String senha) {}
 
 /**
- * DTO para enviar a resposta de login bem-sucedido para o frontend.
+ * DTO para enviar a resposta de login bem-sucedido para o frontend,
+ * incluindo informações para personalizar a experiência do usuário.
  */
-record TokenResponseDTO(long token) {}
+record TokenResponseDTO(long token, String username, String role) {}
 
 
 /**
  * Controller que expõe os endpoints para cadastro e autenticação de Usuários.
  */
 @RestController
-@RequestMapping("/usuarios") // Todas as rotas neste controller começarão com /usuarios
+@RequestMapping("/usuarios")
 public class UsuarioController {
 
     @Autowired
@@ -46,7 +47,8 @@ public class UsuarioController {
 
     /**
      * Endpoint para cadastrar um novo usuário.
-     * Valida os dados, verifica se o username já existe e salva o usuário com senha criptografada.
+     * Valida os dados, verifica se o username já existe e salva o usuário com senha criptografada
+     * e com a role padrão "USER".
      */
     @PostMapping("/cadastrar")
     public ResponseEntity<String> cadastrar(@Valid @RequestBody UsuarioCadastroDTO dados) {
@@ -64,41 +66,37 @@ public class UsuarioController {
         Usuario novoUsuario = new Usuario();
         novoUsuario.setUsername(dados.username());
         novoUsuario.setSenha(passwordEncoder.encode(dados.senha())); // Criptografa a senha
+        novoUsuario.setRole("USER"); // Define a role padrão para novos usuários
         usuarioRepository.save(novoUsuario);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso!");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso! Faça seu login.");
     }
 
     /**
      * Endpoint para autenticar um usuário.
      * Verifica se o usuário existe e se a senha fornecida corresponde à senha salva no banco.
+     * Em caso de sucesso, retorna o ID, nome e role do usuário.
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDTO dados) {
-        System.out.println("---------------------------------");
-        System.out.println("Tentativa de login para o usuário: " + dados.username());
-
+        // Busca o usuário pelo username fornecido
         var usuarioOptional = usuarioRepository.findByUsername(dados.username());
 
+        // Se o usuário não existir, retorna "Não Autorizado"
         if (usuarioOptional.isEmpty()) {
-            System.out.println("Resultado: Usuário não encontrado no banco de dados.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nome de usuário ou senha inválidos.");
         }
 
         var usuario = usuarioOptional.get();
-        System.out.println("Usuário encontrado. Hash da senha no banco: " + usuario.getSenha());
-        System.out.println("Senha recebida do formulário: " + dados.senha());
 
-        // Compara a senha enviada (texto puro) com a senha criptografada (hash)
-        boolean senhasCorrespondem = passwordEncoder.matches(dados.senha(), usuario.getSenha());
-        System.out.println("As senhas correspondem? " + senhasCorrespondem);
-        System.out.println("---------------------------------");
-
-        if (senhasCorrespondem) {
-            var tokenResponse = new TokenResponseDTO(usuario.getId());
+        // Compara a senha enviada pelo formulário com a senha criptografada no banco
+        if (passwordEncoder.matches(dados.senha(), usuario.getSenha())) {
+            // Se as senhas corresponderem, o login é bem-sucedido
+            var tokenResponse = new TokenResponseDTO(usuario.getId(), usuario.getUsername(), usuario.getRole());
             return ResponseEntity.ok(tokenResponse);
         }
 
+        // Se as senhas não corresponderem, retorna "Não Autorizado"
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nome de usuário ou senha inválidos.");
     }
 }

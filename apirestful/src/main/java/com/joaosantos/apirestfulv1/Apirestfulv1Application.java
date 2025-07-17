@@ -2,101 +2,75 @@ package com.joaosantos.apirestfulv1;
 
 import com.joaosantos.apirestfulv1.model.Autor;
 import com.joaosantos.apirestfulv1.model.Projeto;
+import com.joaosantos.apirestfulv1.model.Usuario;
 import com.joaosantos.apirestfulv1.repository.AutorRepository;
 import com.joaosantos.apirestfulv1.repository.ProjetoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.joaosantos.apirestfulv1.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
+/**
+ * Classe principal que inicia a aplicação Spring Boot.
+ */
 @SpringBootApplication
-public class Apirestfulv1Application implements CommandLineRunner {
+public class Apirestfulv1Application {
 
-	// Quando o método run encontra essa anotação, cria um objeto de uma classe que implementa a
-	// interface ProdutoRepository
-	@Autowired
-	private ProjetoRepository projetoRepository;
-
-	@Autowired
-	private AutorRepository autorRepository;
-
-	// .run() é um método CommandLineRunner e será utilizado para popular banco de dados
-	// .run() coloca no ar o servidor Tomcat
-	// .run() abre e lê as configurações presentes em resources.application.properties
+	/**
+	 * Método principal que é o ponto de entrada da aplicação.
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(Apirestfulv1Application.class, args);
 	}
 
-	@Override
-	public void run(String... args) throws Exception {
+	/**
+	 * CommandLineRunner é um bean que é executado uma vez, logo após o início da aplicação.
+	 * Usamos ele aqui para popular o banco de dados com dados iniciais para teste e desenvolvimento.
+	 * @param autorRepository Repositório para salvar autores.
+	 * @param projetoRepository Repositório para salvar projetos.
+	 * @param usuarioRepository Repositório para salvar usuários.
+	 * @param passwordEncoder Componente para criptografar senhas.
+	 * @return A lógica a ser executada.
+	 */
+	@Bean
+	CommandLineRunner initDatabase(AutorRepository autorRepository,
+								   ProjetoRepository projetoRepository,
+								   UsuarioRepository usuarioRepository,
+								   PasswordEncoder passwordEncoder) {
+		return args -> {
+			System.out.println(">>> LIMPANDO DADOS ANTIGOS...");
+			projetoRepository.deleteAll();
+			usuarioRepository.deleteAll();
+			autorRepository.deleteAll();
 
-		Autor autor1 = new Autor("João Santos");
-		autorRepository.save(autor1);
-		Autor autor2 = new Autor("Carlos Ribeiro");
-		autorRepository.save(autor2);
+			System.out.println(">>> INSERINDO DADOS INICIAIS...");
 
-		Projeto projeto = new Projeto(
-				"pne.png",
-				"PNE 2050",
-				"Painel do Plano Nacional de Energia 2050",
-				"https://dashboard.epe.gov.br/apps/pne/shiny.html",
-				true,
-				LocalDate.of(2024, 4, 26),
-				autor1);
+			// --- 1. Criação do Autor (garantindo que seja único) ---
+			Autor autor1 = new Autor("João Santos");
+			Autor autor2 = new Autor("Carlos Ribeiro");
+			autorRepository.saveAll(List.of(autor1, autor2));
 
-		// Se produto for um objeto transiente, .save() chama o método persist da JPA
-		// Se produto for um objeto destacado, .save() chama o método merge da JPA
-		// Em tempo de compilação, .save() é procurado de ProdutoRepository pra cima
-		// Em tempo de execução, .save() é procurado de ProdutoRepositoryImpl e encontra o método .save() de DAOGenericoImpl e o herda
-		projetoRepository.save(projeto);
+			// --- 2. Criação dos Usuários ---
+			Usuario rootUser = new Usuario("root", passwordEncoder.encode("password"), "ADMIN");
+			Usuario regularUser = new Usuario("user", passwordEncoder.encode("12345678"), "USER");
+			usuarioRepository.saveAll(List.of(rootUser, regularUser));
 
-		projeto = new Projeto(
-				"inova-e.png",
-				"inova-e",
-				"Módulo de PD&D do inova-e",
-				"https://dashboard.epe.gov.br/apps/inova-e/dashboard.html",
-				true,
-				LocalDate.of(2024, 4, 26),
-				autor1);
+			// --- 3. Criação dos Projetos ---
+			Projeto proj1 = new Projeto("pne.png", "Painel PNE", "Painel do Plano Nacional de Energia 2050.", "https://dashboard.epe.gov.br/apps/pne/shiny.html", true, LocalDate.of(2023, 5, 10), autor1);
+			Projeto proj2 = new Projeto("inova-e.png", "inova-e: Investimentos", "Dashboard de investimentos em Pesquisa & Desenvolvimento.", "https://dashboard.epe.gov.br/apps/inova-e/dashboard.html", true, LocalDate.of(2023, 8, 22), autor1);
+			Projeto proj3 = new Projeto("inova-e.png", "inova-e: Módulo de Patentes", "Módulo de análise de patentes do setor energético.", "https://dashboard.epe.gov.br/apps/inova-e/patentes.html", false, LocalDate.of(2023, 11, 5), autor1);
+			Projeto proj4 = new Projeto("surveyForm.jpg", "Formulário de Pesquisa", "Um formulário de pesquisa responsivo criado com HTML e CSS.", "https://pedroalmeida08.github.io/HTML-SurveyForm/", false, LocalDate.of(2022, 1, 15), autor1);
+			Projeto proj5 = new Projeto("tributePage.jpg", "Página de Tributo", "Uma página de tributo simples e responsiva.", "https://pedroalmeida08.github.io/HTML-TributePage/", false, LocalDate.of(2022, 2, 20), autor1);
 
-		projetoRepository.save(projeto);
+			projetoRepository.saveAll(List.of(proj1, proj2, proj3, proj4, proj5));
 
-		projeto = new Projeto(
-				"inova-e.png",
-				"inova-e",
-				"Módulo de Patentes do inova-e",
-				"https://dashboard.epe.gov.br/apps/inova-e/patentes.html",
-				true,
-				LocalDate.of(2024, 4, 26),
-				autor1);
-
-		projetoRepository.save(projeto);
-
-		projeto = new Projeto(
-				"surveyForm.jpg",
-				"Formulário de Pesquisa",
-				"Formulário de Pesquisa - freecodecamp",
-				"https://pedroalmeida08.github.io/HTML-SurveyForm/",
-				true,
-				LocalDate.of(2024, 4, 26),
-				autor1);
-
-		projetoRepository.save(projeto);
-
-		projeto = new Projeto(
-				"tributePage.jpg",
-				"Página de Tributo",
-				"Página de Tributo ao Dr. Norman Bourlaug",
-				"https://pedroalmeida08.github.io/HTML-TributePage/",
-				true,
-				LocalDate.of(2024, 4, 26),
-				autor1);
-
-		projetoRepository.save(projeto);
-
-		System.out.println("Ok!");
+			System.out.println(">>> BANCO DE DADOS POPULADO COM SUCESSO <<<");
+		};
 	}
 }
