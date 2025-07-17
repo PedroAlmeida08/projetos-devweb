@@ -1,67 +1,93 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import useUsuarioStore from '../store/UsuarioStore';
 import useProjetosFavoritosQuery from '../hooks/useProjetosFavoritosQuery';
-import ProjectCard from '../components/ProjectCard';
+import { useCarrinhoStore } from '../store/CarrinhoStore';
+import useRemoverFavoritoMutation from '../hooks/useRemoverFavoritoMutation';
+import QuantityInput from '../components/QuantityInput'; // Importa o novo componente
 
 const Favoritos: React.FC = () => {
-  // 1. Pega as informações do usuário logado do store global.
   const user = useUsuarioStore((s) => s.user);
+  
+  // Acessa o estado e as ações do carrinho
+  const { itens: itensNoCarrinho, adicionarItem, diminuirItem, setItemQuantidade } = useCarrinhoStore();
+  
+  const { data: projetosFavoritos, isLoading, error } = useProjetosFavoritosQuery(user!.id);
+  const removerFavoritoMutation = useRemoverFavoritoMutation();
 
-  // 2. Usa o hook do React Query para buscar os projetos favoritos.
-  // A exclamação '!' em user!.id diz ao TypeScript: "Eu garanto que 'user' não é nulo aqui",
-  // pois esta página está protegida pela PrivateRoute.
-  const { data: projetos, isLoading, error } = useProjetosFavoritosQuery(user!.id);
+  const handleRemoverFavorito = (projetoId: number) => {
+    removerFavoritoMutation.mutate({ usuarioId: user!.id, projetoId });
+  };
 
-  // 3. Renderiza um estado de carregamento enquanto os dados são buscados.
-  if (isLoading) {
-    return (
-      <div className="container text-center my-5">
-        <p className="lead">Carregando seus favoritos...</p>
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="container text-center my-5"><div className="spinner-border text-primary" /></div>;
+  if (error) return <div className="container text-center my-5 alert alert-danger">Erro: {error.message}</div>;
 
-  // 4. Renderiza uma mensagem de erro se a busca falhar.
-  if (error) {
-    return (
-        <div className="container text-center my-5">
-            <div className="alert alert-danger">
-                <strong>Erro ao carregar favoritos:</strong> {error.message}
-            </div>
-        </div>
-    );
-  }
-
-  // 5. Renderização principal quando os dados estão prontos.
   return (
-    <section id="favoritos" className="mt-2">
-      <div className="container-lg">
+    <section id="favoritos">
+      <div className="container my-5">
         <div className="text-center mb-5">
           <h1 className="display-4">Meus Projetos Favoritos</h1>
-          <p className="lead text-muted">Seus projetos salvos em um só lugar para fácil acesso.</p>
+          <p className="lead text-muted">Gerencie seus projetos e adicione-os ao carrinho diretamente daqui.</p>
         </div>
-        <div className="container my-5">
-          {/* Verifica se a lista de projetos favoritos não está vazia */}
-          {projetos && projetos.length > 0 ? (
-            <div className="row g-4 justify-content-center">
-              {/* Mapeia a lista e renderiza um ProjectCard para cada projeto */}
-              {projetos.map((projeto) => (
-                <div className="col-10 col-md-6 col-lg-4" key={projeto.id}>
-                  <ProjectCard projeto={projeto} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            // Mensagem exibida se a lista de favoritos estiver vazia
-            <div className="text-center">
-              <p className="lead">Você ainda não adicionou nenhum projeto aos seus favoritos.</p>
-              <p className="text-muted">Clique no ícone de coração nos projetos que você gostar para adicioná-los aqui!</p>
-            </div>
-          )}
-        </div>
+
+        {projetosFavoritos && projetosFavoritos.length > 0 ? (
+          <ul className="list-group shadow-sm">
+            <li className="list-group-item d-none d-md-flex bg-light">
+              <div className="col-md-5 fw-bold">Projeto</div>
+              <div className="col-md-2 fw-bold text-center">Preço Unitário</div>
+              <div className="col-md-2 fw-bold text-center">Quantidade no Carrinho</div>
+              <div className="col-md-2 fw-bold text-end">Preço Total</div>
+              <div className="col-md-1 fw-bold text-end">Ação</div>
+            </li>
+
+            {projetosFavoritos.map(projeto => {
+              const itemNoCarrinho = itensNoCarrinho.find(i => i.projeto.id === projeto.id);
+              const quantidade = itemNoCarrinho?.quantidade || 0;
+              const precoTotal = projeto.preco * quantidade;
+
+              return (
+                <li key={projeto.id} className="list-group-item d-flex align-items-center flex-wrap">
+                  <div className="col-12 col-md-5 d-flex align-items-center mb-2 mb-md-0">
+                    <img src={`/assets/${projeto.imagem}`} alt={projeto.nome} style={{ width: '50px', height: '50px', objectFit: 'cover' }} className="me-3 rounded" />
+                    <span>{projeto.nome}</span>
+                  </div>
+                  <div className="col-4 col-md-2 text-md-center">
+                    <span className="d-md-none">Preço: </span>R$ {projeto.preco.toFixed(2)}
+                  </div>
+                  <div className="col-8 col-md-2 d-flex justify-content-end justify-content-md-center">
+                    
+                    {/* ✅ USANDO O NOVO COMPONENTE CONTROLADO ✅ */}
+                    <QuantityInput 
+                      quantidade={quantidade}
+                      onAumentar={() => adicionarItem(projeto)}
+                      onDiminuir={() => diminuirItem(projeto.id)}
+                      onDefinir={(novaQtde) => setItemQuantidade(projeto.id, novaQtde)}
+                    />
+
+                  </div>
+                  <div className="col-6 col-md-2 text-md-end fw-bold">
+                    <span className="d-md-none">Total: </span>R$ {precoTotal.toFixed(2)}
+                  </div>
+                  <div className="col-6 col-md-1 text-end">
+                    <button 
+                      onClick={() => handleRemoverFavorito(projeto.id)}
+                      className="btn btn-sm btn-outline-danger"
+                      aria-label="Remover dos favoritos"
+                      title="Remover dos favoritos"
+                    >
+                      <img src='/icons/heart-fill.svg' alt="Remover favorito" style={{ width: '16px' }}/>
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div className="text-center">
+            <p className="lead">Você ainda não adicionou nenhum projeto aos seus favoritos.</p>
+            <Link to="/projects" className="btn btn-primary">Ver Projetos</Link>
+          </div>
+        )}
       </div>
     </section>
   );

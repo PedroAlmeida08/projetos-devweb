@@ -10,6 +10,7 @@ import Cadastro from '../pages/Cadastro';
 import Login from '../pages/Login';
 import Favoritos from '../pages/Favoritos';
 import AdminPage from '../pages/AdminPage';
+import Carrinho from '../pages/Carrinho'; // 1. Importe a nova página do Carrinho
 
 // Componentes de Rota Protegida
 import PrivateRoute from './PrivateRoute';
@@ -18,7 +19,7 @@ import AdminRoute from './AdminRoute';
 const AppRouter: React.FC = () => {
   return (
     <Routes>
-      {/* --- Rotas Públicas (acessíveis a todos) --- */}
+      {/* --- Rotas Públicas --- */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<Sobre />} />
       <Route path="/projects" element={<Projetos />} />
@@ -29,9 +30,11 @@ const AppRouter: React.FC = () => {
       {/* --- Rotas Privadas (para qualquer usuário logado) --- */}
       <Route element={<PrivateRoute />}>
         <Route path="/favoritos" element={<Favoritos />} />
+        {/* ✅ ADICIONE A NOVA ROTA DO CARRINHO AQUI ✅ */}
+        <Route path="/carrinho" element={<Carrinho />} />
       </Route>
 
-      {/* --- Rotas de Administrador (apenas para usuários com role 'ADMIN') --- */}
+      {/* --- Rotas de Administrador --- */}
       <Route element={<AdminRoute />}>
         <Route path="/admin" element={<AdminPage />} />
       </Route>

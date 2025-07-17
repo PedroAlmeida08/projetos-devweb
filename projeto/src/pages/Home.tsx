@@ -1,6 +1,5 @@
-// src/pages/Home.tsx
 import React from 'react';
-import { Link } from 'react-router-dom'; // Use Link para botões de navegação interna
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   return (
@@ -23,7 +22,7 @@ const Home: React.FC = () => {
             </Link>
           </div>
           <div className="col-md-5 text-center d-none d-md-block">
-            {/* Lembre-se de que a imagem deve estar na pasta /public/assets/ */}
+            {/* ✅ CORREÇÃO AQUI: O caminho agora aponta para a pasta /assets/ */}
             <img src="/assets/hello-world.png" className="img-fluid" alt="Hello World" />
           </div>
         </div>

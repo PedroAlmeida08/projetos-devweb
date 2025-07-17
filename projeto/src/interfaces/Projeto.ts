@@ -5,8 +5,8 @@ export interface Projeto {
   imagem: string;
   nome: string;
   descricao: string;
-  destaque: boolean;
   dataCadastro: string;
+  preco: number; // ou BigDecimal se você tiver uma lib para isso
   autor: Autor;
   url: string;
 }

@@ -1,14 +1,22 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useUsuarioStore from '../store/UsuarioStore';
+import { useCarrinhoStore } from '../store/CarrinhoStore';
 
 const Header: React.FC = () => {
-  // Acessa o objeto de usuário completo e a ação de logout do store
+  // Acessa o objeto de usuário e a ação de logout do store de usuário
   const { user, logout } = useUsuarioStore();
+  
+  // Acessa a contagem total de itens do store do carrinho
+  const totalItensNoCarrinho = useCarrinhoStore((s) => s.totalItens);
+  
+  // Hook para navegação programática
   const navigate = useNavigate();
 
+  // Função para lidar com o logout
   const handleLogout = () => {
-    logout(); // Ação do store que limpa user e favoritos
+    logout(); // Limpa o estado do usuário (user e favoritos)
+    useCarrinhoStore.getState().limparCarrinho(); // Limpa também o carrinho
     navigate('/login'); // Redireciona para a página de login
   };
 
@@ -25,20 +33,13 @@ const Header: React.FC = () => {
         </button>
         <div className="collapse navbar-collapse justify-content-end align-center" id="main-nav">
           <ul className="navbar-nav align-items-center">
+            {/* Links públicos */}
             <li className="nav-item">
               <NavLink className="nav-link text-white fw-bold" to="/">Home</NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link text-white fw-bold" to="/projects">Projetos</NavLink>
             </li>
-
-            {/* Link condicional para Favoritos: só aparece se houver um usuário logado */}
-            {user && (
-              <li className="nav-item">
-                <NavLink className="nav-link text-white fw-bold" to="/favoritos">Favoritos</NavLink>
-              </li>
-            )}
-            
             <li className="nav-item">
               <NavLink className="nav-link text-white fw-bold" to="/about">Sobre</NavLink>
             </li>
@@ -46,13 +47,33 @@ const Header: React.FC = () => {
               <NavLink className="nav-link text-white fw-bold" to="/contact">Contato</NavLink>
             </li>
 
-            {/* Link condicional para Admin: só aparece se o usuário tiver a role 'ADMIN' */}
+            {/* Links que só aparecem para usuários logados */}
+            {user && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link text-white fw-bold" to="/favoritos">Favoritos</NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link text-white fw-bold position-relative" to="/carrinho" aria-label="Carrinho de Compras">
+                    <i className="bi bi-cart"></i>
+                    {totalItensNoCarrinho > 0 && 
+                      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {totalItensNoCarrinho}
+                        <span className="visually-hidden">itens no carrinho</span>
+                      </span>
+                    }
+                  </NavLink>
+                </li>
+              </>
+            )}
+
+            {/* Link condicional para Admin */}
             {user?.role === 'ADMIN' && (
               <li className="nav-item">
                 <NavLink className="nav-link text-white fw-bold" to="/admin">Admin</NavLink>
               </li>
             )}
-
+            
             {/* Botão condicional de Login/Logout */}
             {user ? (
               <li className="nav-item ms-md-2 mt-2 mt-md-0">

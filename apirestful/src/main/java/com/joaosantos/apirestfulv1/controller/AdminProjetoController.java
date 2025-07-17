@@ -1,29 +1,17 @@
 package com.joaosantos.apirestfulv1.controller;
 
+import com.joaosantos.apirestfulv1.dto.ProjetoCadastroDTO; // Supondo que o DTO está no pacote 'dto'
 import com.joaosantos.apirestfulv1.model.Autor;
 import com.joaosantos.apirestfulv1.model.Projeto;
 import com.joaosantos.apirestfulv1.repository.AutorRepository;
 import com.joaosantos.apirestfulv1.repository.ProjetoRepository;
-import com.joaosantos.apirestfulv1.service.ProjetoService; // Importe o seu serviço
+import com.joaosantos.apirestfulv1.service.ProjetoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-
-/**
- * DTO para receber os dados de criação/alteração de um projeto a partir do frontend.
- * Ele desacopla a API do modelo de domínio interno.
- */
-record ProjetoCadastroDTO(
-        String nome,
-        String descricao,
-        String url,
-        String imagem,
-        boolean destaque,
-        Long autorId
-) {}
 
 /**
  * Controller para gerenciar as operações de CRUD (Criar, Ler, Alterar, Deletar)
@@ -58,7 +46,6 @@ public class AdminProjetoController {
         novoProjeto.setDescricao(dto.descricao());
         novoProjeto.setUrl(dto.url());
         novoProjeto.setImagem(dto.imagem());
-        novoProjeto.setDestaque(dto.destaque());
         novoProjeto.setAutor(autor);
         novoProjeto.setDataCadastro(LocalDate.now()); // Define a data de cadastro no momento da criação
 
@@ -85,7 +72,6 @@ public class AdminProjetoController {
         projeto.setDescricao(dto.descricao());
         projeto.setUrl(dto.url());
         projeto.setImagem(dto.imagem());
-        projeto.setDestaque(dto.destaque());
         projeto.setAutor(autor);
 
         Projeto projetoAtualizado = projetoRepository.save(projeto);
@@ -98,11 +84,8 @@ public class AdminProjetoController {
      * e que as referências nos favoritos dos usuários sejam limpas.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarProjeto(@PathVariable Long id) { // <-- Nome do método no CONTROLLER
-
-        // Chama o método do serviço, que agora tem a lógica completa
-        projetoService.removerProjeto(id); // <-- Chamada ao método correto no SERVIÇO
-
+    public ResponseEntity<Void> deletarProjeto(@PathVariable Long id) {
+        projetoService.removerProjeto(id);
         return ResponseEntity.noContent().build();
     }
 }

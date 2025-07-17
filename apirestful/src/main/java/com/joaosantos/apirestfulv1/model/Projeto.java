@@ -2,11 +2,11 @@ package com.joaosantos.apirestfulv1.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor; // 1. Importe a nova anotação
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal; // Importa o tipo ideal para valores monetários
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +15,7 @@ import java.util.Set;
 @Table(name = "projetos")
 @Getter
 @Setter
-@NoArgsConstructor          // Cria o construtor vazio: public Projeto() {}
-@AllArgsConstructor     // 2. Adicione esta anotação para criar o construtor com todos os campos
+@NoArgsConstructor
 public class Projeto {
 
     @Id
@@ -27,8 +26,10 @@ public class Projeto {
     private String nome;
     private String descricao;
     private String url;
-    private boolean destaque;
     private LocalDate dataCadastro;
+
+    @Column(nullable = false, precision = 10, scale = 2) // Define precisão para valores monetários
+    private BigDecimal preco; // ✅ NOVO CAMPO ADICIONADO
 
     @ManyToOne
     @JoinColumn(name = "autor_id")
@@ -39,18 +40,15 @@ public class Projeto {
     private Set<Usuario> favoritadosPor = new HashSet<>();
 
     /**
-     * Construtor customizado para facilitar a criação de novos projetos sem precisar passar todos os campos.
-     * Útil para o seu arquivo de seeding (ApirestfulApplication.java).
-     * O Lombok @AllArgsConstructor cria um construtor com TODOS os campos, incluindo id, favoritadosPor, etc.
-     * Às vezes, um construtor manual como este pode ser mais prático.
+     * Construtor customizado e ATUALIZADO para facilitar a criação de novos projetos.
      */
-    public Projeto(String imagem, String nome, String descricao, String url, boolean destaque, LocalDate dataCadastro, Autor autor) {
+    public Projeto(String imagem, String nome, String descricao, String url, LocalDate dataCadastro, Autor autor, BigDecimal preco) {
         this.imagem = imagem;
         this.nome = nome;
         this.descricao = descricao;
         this.url = url;
-        this.destaque = destaque;
         this.dataCadastro = dataCadastro;
         this.autor = autor;
+        this.preco = preco; // ✅
     }
 }
