@@ -1,88 +1,77 @@
 package com.joaosantos.apirestfulv1.controller;
 
-import com.joaosantos.apirestfulv1.dto.ProjetoCadastroDTO; // Supondo que o DTO está no pacote 'dto'
 import com.joaosantos.apirestfulv1.model.Autor;
 import com.joaosantos.apirestfulv1.model.Projeto;
 import com.joaosantos.apirestfulv1.repository.AutorRepository;
 import com.joaosantos.apirestfulv1.repository.ProjetoRepository;
 import com.joaosantos.apirestfulv1.service.ProjetoService;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
-/**
- * Controller para gerenciar as operações de CRUD (Criar, Ler, Alterar, Deletar)
- * para a entidade Projeto, acessível apenas por administradores.
- */
+// ✅ DTO ATUALIZADO para incluir o preço
+record ProjetoCadastroDTO(
+        @NotEmpty String nome,
+        @NotEmpty String descricao,
+        @URL String url,
+        @NotEmpty String imagem,
+        @NotNull Long autorId,
+        @NotNull BigDecimal preco
+) {}
+
+
 @RestController
 @RequestMapping("/api/admin/projetos")
 public class AdminProjetoController {
 
-    @Autowired
-    private ProjetoRepository projetoRepository;
+    @Autowired private ProjetoRepository projetoRepository;
+    @Autowired private AutorRepository autorRepository;
+    @Autowired private ProjetoService projetoService;
 
-    @Autowired
-    private AutorRepository autorRepository;
-
-    @Autowired
-    private ProjetoService projetoService;
-
-    /**
-     * Endpoint para CRIAR um novo projeto.
-     * Recebe um DTO com os dados do projeto e o ID do autor.
-     */
     @PostMapping
     public ResponseEntity<Projeto> criarProjeto(@RequestBody ProjetoCadastroDTO dto) {
-        // Busca a entidade Autor completa a partir do ID fornecido
         Autor autor = autorRepository.findById(dto.autorId())
                 .orElseThrow(() -> new RuntimeException("Autor não encontrado com id: " + dto.autorId()));
 
-        // Cria a nova entidade Projeto
         Projeto novoProjeto = new Projeto();
         novoProjeto.setNome(dto.nome());
         novoProjeto.setDescricao(dto.descricao());
         novoProjeto.setUrl(dto.url());
         novoProjeto.setImagem(dto.imagem());
         novoProjeto.setAutor(autor);
-        novoProjeto.setDataCadastro(LocalDate.now()); // Define a data de cadastro no momento da criação
+        novoProjeto.setDataCadastro(LocalDate.now());
+        novoProjeto.setPreco(dto.preco()); // ✅ LINHA ADICIONADA
 
         Projeto projetoSalvo = projetoRepository.save(novoProjeto);
         return ResponseEntity.status(HttpStatus.CREATED).body(projetoSalvo);
     }
 
-    /**
-     * Endpoint para ALTERAR um projeto existente.
-     * Busca o projeto pelo ID e atualiza seus dados com base no DTO recebido.
-     */
     @PutMapping("/{id}")
     public ResponseEntity<Projeto> alterarProjeto(@PathVariable Long id, @RequestBody ProjetoCadastroDTO dto) {
-        // Busca o projeto existente ou lança uma exceção se não encontrado
         Projeto projeto = projetoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Projeto não encontrado com id: " + id));
 
-        // Busca o novo autor (pode ser o mesmo ou um diferente)
         Autor autor = autorRepository.findById(dto.autorId())
                 .orElseThrow(() -> new RuntimeException("Autor não encontrado com id: " + dto.autorId()));
 
-        // Atualiza os campos do projeto existente
         projeto.setNome(dto.nome());
         projeto.setDescricao(dto.descricao());
         projeto.setUrl(dto.url());
         projeto.setImagem(dto.imagem());
         projeto.setAutor(autor);
+        projeto.setPreco(dto.preco()); // ✅ LINHA ADICIONADA
 
         Projeto projetoAtualizado = projetoRepository.save(projeto);
         return ResponseEntity.ok(projetoAtualizado);
     }
 
-    /**
-     * Endpoint para DELETAR um projeto.
-     * Utiliza o ProjetoService para garantir que a remoção seja transacional
-     * e que as referências nos favoritos dos usuários sejam limpas.
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarProjeto(@PathVariable Long id) {
         projetoService.removerProjeto(id);

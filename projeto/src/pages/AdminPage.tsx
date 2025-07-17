@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import useProjetosQuery from '../hooks/useProjetosQuery';
+import useAutoresQuery from '../hooks/useAutoresQuery';
 import useDeletarProjetoMutation from '../hooks/useDeletarProjetoMutation';
-import ProjetoForm from '../components/ProjetoForm';
-import { type Projeto } from '../interfaces/Projeto';
 import useCriarProjetoMutation from '../hooks/useCriarProjetoMutation';
 import useAlterarProjetoMutation from '../hooks/useAlterarProjetoMutation';
-
-const fetchProjetos = async (): Promise<Projeto[]> => {
-  const response = await fetch('http://localhost:8080/projetos');
-  if (!response.ok) throw new Error('Falha ao buscar projetos');
-  return response.json();
-};
-const useProjetosQuery = () => useQuery<Projeto[], Error>({ queryKey: ['projetos'], queryFn: fetchProjetos });
+import ProjetoForm from '../components/ProjetoForm';
+import { type Projeto } from '../interfaces/Projeto';
 
 const AdminPage: React.FC = () => {
   const [showForm, setShowForm] = useState(false);
   const [projetoEmEdicao, setProjetoEmEdicao] = useState<Projeto | undefined>(undefined);
   
-  const { data: projetos, isLoading, error } = useProjetosQuery();
+  const { data: projetos, isLoading: isLoadingProjetos, error: errorProjetos } = useProjetosQuery();
+  const { data: autores, isLoading: isLoadingAutores, error: errorAutores } = useAutoresQuery();
+  
   const deletarMutation = useDeletarProjetoMutation();
   const criarMutation = useCriarProjetoMutation();
   const alterarMutation = useAlterarProjetoMutation();
@@ -38,20 +34,40 @@ const AdminPage: React.FC = () => {
     setShowForm(false);
   };
 
+  /**
+   * ✅ FUNÇÃO CORRIGIDA ✅
+   * Esta função agora garante que os dados do formulário sejam convertidos para os tipos corretos
+   * (números para preco e autorId) antes de serem enviados para a API.
+   */
   const handleSalvarProjeto = (data: any) => {
-    // Converte autorId de string para número
-    const dadosFormatados = { ...data, autorId: Number(data.autorId) };
+    const dadosFormatados = {
+      ...data,
+      autorId: Number(data.autorId),
+      preco: Number(data.preco)
+    };
+
+    if (!dadosFormatados.autorId) {
+        alert("Por favor, selecione um autor.");
+        return;
+    }
 
     if (projetoEmEdicao) {
-      alterarMutation.mutate({ ...projetoEmEdicao, ...dadosFormatados }, { onSuccess: handleFecharForm });
+      // Alterar: envia o projeto completo com as novas informações
+      alterarMutation.mutate({ ...projetoEmEdicao, ...dadosFormatados }, {
+        onSuccess: handleFecharForm,
+      });
     } else {
-      // O backend agora adiciona a data, então não precisamos mais enviar
-      criarMutation.mutate(dadosFormatados, { onSuccess: handleFecharForm });
+      // Criar: envia o DTO formatado
+      // O backend irá adicionar a data de cadastro.
+      criarMutation.mutate(dadosFormatados, {
+        onSuccess: handleFecharForm,
+      });
     }
   };
   
-  if (isLoading) return <div className="container my-5"><p>Carregando projetos...</p></div>;
-  if (error) return <div className="container my-5 alert alert-danger">Erro: {error.message}</div>;
+  if (isLoadingProjetos || isLoadingAutores) return <div className="container my-5 text-center"><p>Carregando dados do administrador...</p><div className="spinner-border text-primary" /></div>;
+  if (errorProjetos) return <div className="container my-5 alert alert-danger">Erro ao carregar projetos: {errorProjetos.message}</div>;
+  if (errorAutores) return <div className="container my-5 alert alert-danger">Erro ao carregar autores: {errorAutores.message}</div>;
 
   return (
     <div className="container my-5">
@@ -59,18 +75,21 @@ const AdminPage: React.FC = () => {
         <h1 className="display-4">Gerenciar Projetos</h1>
         {!showForm && (
             <button className="btn btn-primary btn-lg" onClick={() => handleAbrirForm()}>
+            <i className="bi bi-plus-circle me-2"></i>
             Adicionar Novo Projeto
             </button>
         )}
       </div>
 
       {showForm && (
-        <div className="card card-body mb-4">
+        <div className="card card-body mb-4 shadow-sm">
           <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-3">{projetoEmEdicao ? 'Editando Projeto' : 'Novo Projeto'}</h5>
+            <h5 className="mb-0">{projetoEmEdicao ? `Editando: ${projetoEmEdicao.nome}` : 'Novo Projeto'}</h5>
             <button type="button" className="btn-close" aria-label="Close" onClick={handleFecharForm}></button>
           </div>
+          <hr/>
           <ProjetoForm 
+            autores={autores || []}
             projeto={projetoEmEdicao}
             onSubmit={handleSalvarProjeto}
             onCancel={handleFecharForm}
@@ -81,7 +100,7 @@ const AdminPage: React.FC = () => {
 
       <div className="table-responsive">
         <table className="table table-striped table-hover">
-          <thead>
+          <thead className="table-dark">
             <tr>
               <th>ID</th>
               <th>Nome</th>

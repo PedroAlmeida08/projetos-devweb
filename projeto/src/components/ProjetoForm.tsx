@@ -1,28 +1,27 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { type Projeto } from '../interfaces/Projeto';
-import useAutoresQuery from '../hooks/useAutoresQuery';
+import { type Autor } from '../interfaces/Autor'; // Importe a interface Autor
 
 // O formulário agora lida com um DTO que envia o autorId
-type ProjetoFormData = Omit<Projeto, 'id' | 'autor' | 'dataCadastro'> & { autorId: string };
+type ProjetoFormData = Omit<Projeto, 'id' | 'autor' | 'dataCadastro' | 'preco'> & { preco: string | number, autorId: string };
 
 interface ProjetoFormProps {
+  autores: Autor[]; // ✅ ADICIONE ESTA LINHA
   projeto?: Projeto;
   onSubmit: (data: ProjetoFormData) => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }
 
-const ProjetoForm: React.FC<ProjetoFormProps> = ({ projeto, onSubmit, onCancel, isSubmitting }) => {
-  const { data: autores, isLoading: isLoadingAutores } = useAutoresQuery();
-  
+const ProjetoForm: React.FC<ProjetoFormProps> = ({ autores, projeto, onSubmit, onCancel, isSubmitting }) => {
   const { register, handleSubmit, reset } = useForm<ProjetoFormData>({
     defaultValues: {
       nome: projeto?.nome || '',
       descricao: projeto?.descricao || '',
       url: projeto?.url || '',
       imagem: projeto?.imagem || '',
-      destaque: projeto?.destaque || false,
+      preco: projeto?.preco || 0,
       autorId: projeto?.autor?.id?.toString() || '',
     }
   });
@@ -33,7 +32,7 @@ const ProjetoForm: React.FC<ProjetoFormProps> = ({ projeto, onSubmit, onCancel, 
       descricao: projeto?.descricao || '',
       url: projeto?.url || '',
       imagem: projeto?.imagem || '',
-      destaque: projeto?.destaque || false,
+      preco: projeto?.preco || 0,
       autorId: projeto?.autor?.id?.toString() || '',
     };
     reset(defaultVals);
@@ -46,19 +45,15 @@ const ProjetoForm: React.FC<ProjetoFormProps> = ({ projeto, onSubmit, onCancel, 
         <input type="text" id="nome" className="form-control" {...register('nome')} required />
       </div>
 
-      {/* NOVO CAMPO DE SELEÇÃO DE AUTOR */}
       <div className="mb-3">
         <label htmlFor="autorId" className="form-label">Autor</label>
         <select 
           id="autorId" 
           className="form-select" 
           {...register('autorId')} 
-          disabled={isLoadingAutores}
           required
         >
-          <option value="" disabled>
-            {isLoadingAutores ? 'Carregando autores...' : 'Selecione um autor'}
-          </option>
+          <option value="" disabled>Selecione um autor</option>
           {autores?.map(autor => (
             <option key={autor.id} value={autor.id}>{autor.nome}</option>
           ))}
@@ -69,18 +64,22 @@ const ProjetoForm: React.FC<ProjetoFormProps> = ({ projeto, onSubmit, onCancel, 
         <label htmlFor="descricao" className="form-label">Descrição</label>
         <textarea id="descricao" className="form-control" {...register('descricao')} required />
       </div>
+
       <div className="mb-3">
         <label htmlFor="url" className="form-label">URL do Projeto</label>
         <input type="url" id="url" className="form-control" {...register('url')} required />
       </div>
+
       <div className="mb-3">
         <label htmlFor="imagem" className="form-label">Nome do Arquivo da Imagem (ex: pne.png)</label>
         <input type="text" id="imagem" className="form-control" {...register('imagem')} required />
       </div>
-      <div className="form-check mb-3">
-        <input type="checkbox" id="destaque" className="form-check-input" {...register('destaque')} />
-        <label htmlFor="destaque" className="form-check-label">Marcar como Destaque</label>
+      
+      <div className="mb-3">
+        <label htmlFor="preco" className="form-label">Preço</label>
+        <input type="number" step="0.01" id="preco" className="form-control" {...register('preco', { valueAsNumber: true })} required />
       </div>
+
       <div className="d-flex justify-content-end gap-2">
         <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancelar</button>
         <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
